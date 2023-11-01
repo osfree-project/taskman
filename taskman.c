@@ -54,6 +54,21 @@ BOOL CALLBACK _export TaskManDlgProc(HWND hWndDlg, UINT msg, WPARAM wParam, LPAR
 	switch (msg) {
 	case WM_INITDIALOG:
 		{
+			RECT rect;
+			
+			GetWindowRect(hWndDlg, &rect);
+		        SetWindowPos(hWndDlg,
+				HWND_NOTOPMOST,
+				(GetSystemMetrics(SM_CXSCREEN)-(rect.right-rect.left))/2,
+				(GetSystemMetrics(SM_CYSCREEN)-(rect.bottom-rect.top))/2,
+				0,
+				0,
+				SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE
+			);
+			break;
+		}
+	case WM_SHOWWINDOW:
+		{
 			HWND hListBox=GetDlgItem(hWndDlg, IDD_TASKLIST);
 
 			SendMessage(hListBox, WM_SETREDRAW, FALSE, 0);
