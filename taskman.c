@@ -55,7 +55,7 @@ BOOL CALLBACK _export TaskManDlgProc(HWND hWndDlg, UINT msg, WPARAM wParam, LPAR
 	case WM_INITDIALOG:
 		{
 			RECT rect;
-			
+
 			GetWindowRect(hWndDlg, &rect);
 		        SetWindowPos(hWndDlg,
 				HWND_NOTOPMOST,
@@ -69,14 +69,22 @@ BOOL CALLBACK _export TaskManDlgProc(HWND hWndDlg, UINT msg, WPARAM wParam, LPAR
 		}
 	case WM_SHOWWINDOW:
 		{
-			HWND hListBox=GetDlgItem(hWndDlg, IDD_TASKLIST);
+			if (wParam) // on show
+			{
+				HWND hListBox=GetDlgItem(hWndDlg, IDD_TASKLIST);
 
-			SendMessage(hListBox, WM_SETREDRAW, FALSE, 0);
-			EnumWindows(EnumWindowsProc, (LPARAM)hListBox);
-			SendMessage(hListBox, LB_SETCURSEL, 0, 0);
-			SendMessage(hListBox, WM_SETREDRAW, TRUE, 0);
-			InvalidateRect(hListBox, NULL, TRUE);
-			return FALSE;
+				while (SendMessage(hListBox, LB_DELETESTRING, 0, 0)!=LB_ERR) {};
+
+				SendMessage(hListBox, WM_SETREDRAW, FALSE, 0);
+
+				EnumWindows(EnumWindowsProc, (LPARAM)hListBox);
+
+				SendMessage(hListBox, LB_SETCURSEL, 0, 0);
+				SendMessage(hListBox, WM_SETREDRAW, TRUE, 0);
+				InvalidateRect(hListBox, NULL, TRUE);
+				return FALSE;
+			}
+			break;
 		}
 
 	case WM_CLOSE:
