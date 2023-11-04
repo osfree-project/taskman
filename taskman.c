@@ -65,6 +65,24 @@ BOOL CALLBACK _export TaskManDlgProc(HWND hWndDlg, UINT msg, WPARAM wParam, LPAR
 				0,
 				SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE
 			);
+			return FALSE;
+		}
+	case WM_ACTIVATEAPP:
+		{
+			if (!wParam) // on deactivate
+			{
+				SendMessage(hWndDlg, WM_CLOSE, 0, 0);
+			        return FALSE;
+			}
+			break;
+		}
+	case WM_ACTIVATE:
+		{
+			if (!wParam) // on deactivate
+			{
+				SendMessage(hWndDlg, WM_CLOSE, 0, 0);
+				return FALSE;
+			}
 			break;
 		}
 	case WM_SHOWWINDOW:
