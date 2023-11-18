@@ -16,7 +16,7 @@ HEAPSIZE = 4k
 
 !include $(%ROOT)tools/mk/appsw16.mk
 
-TARGETS = $(PATH)$(PROJ1).exe # subdirs
+TARGETS = $(PATH)$(PROJ1).exe
 
 .ico: $(MYDIR)res
 
