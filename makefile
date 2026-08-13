@@ -1,25 +1,12 @@
 #
-# A Makefile for TASKMAN
-# (c) osFree project,
-# author, date
+# A Makefile for osFree Janus Task Manager
+# (c) osFree project
 #
 
-PROJ  = taskman1
-PROJ1 = taskman
-TRGT = $(PROJ1).exe
-DESC = Windows Task Manager
-#defines object file names in format $(p)objname$(e)
-srcfiles = $(p)taskman$(e) 
-# defines additional options for C compiler
+DESCRIPTION = osFree Janus Task Manager
+TARGET_API = WIN
+
 ADD_COPT = -sg
-HEAPSIZE = 4k
 
-!include $(%ROOT)tools/mk/appsw16.mk
+!include $(%ROOT)tools/mk/build.mk
 
-TARGETS = $(PATH)$(PROJ1).exe
-
-.ico: $(MYDIR)res
-
-$(PATH)$(PROJ1).exe: $(PATH)$(PROJ).exe $(MYDIR)rsrc.rc
- @$(SAY) RESCMP   $^. $(LOG)
- @$(RC) -30 -q -bt=windows $]@ $[@ -fe=$@ -fo=$^@ -i=$(MYDIR) -i=$(%WATCOM)$(SEP)h$(SEP)win

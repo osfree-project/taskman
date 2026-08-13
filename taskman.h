@@ -22,3 +22,7 @@ VOID WINAPI TileChildWindows(HWND,WORD);
 VOID WINAPI CascadeChildWindows(HWND,WORD);
 VOID WINAPI SwitchToThisWindow(HWND, BOOL);
 
+// Not defined for win 3.0
+#define MDITILE_VERTICAL        0x0000
+#define MDITILE_HORIZONTAL      0x0001
+#define SM_PENWINDOWS           41
