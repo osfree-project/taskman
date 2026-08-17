@@ -4,7 +4,6 @@
 #
 
 DESCRIPTION = osFree Janus Task Manager
-TARGET_API = WIN
 
 ADD_COPT = -sg
 
