@@ -5,7 +5,5 @@
 
 DESCRIPTION = osFree Janus Task Manager
 
-ADD_COPT = -sg
-
 !include $(%ROOT)tools/mk/build.mk
 
