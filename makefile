@@ -3,7 +3,7 @@
 # (c) osFree project
 #
 
-DESCRIPTION = osFree Janus Task Manager
+DESCRIPTION = Janus Task Manager
 
 !include $(%ROOT)tools/mk/build.mk
 
