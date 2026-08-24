@@ -3,7 +3,9 @@
  *
  * Copyright 2023 by Yuri Prokushev
  *
- * osFree licence.
+ *
+ *  SPDX-License-Identifier: BSD-3-Clause
+ *
  */
 
 /*

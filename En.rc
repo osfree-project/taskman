@@ -3,7 +3,9 @@
 ; 
 ;  Copyright 2023 by Yuri Prokushev
 ; 
-;  osFree licence.
+;   (c) osFree Project 2002-2026, <https://www.osFree.org>
+; 
+;   SPDX-License-Identifier: BSD-3-Clause
 ; 
 
 10 DIALOG 0, 0, 160, 107
