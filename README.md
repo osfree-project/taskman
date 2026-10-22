@@ -1,3 +1,7 @@
+<!--
+SPDX-FileCopyrightText: (C) 2026 osFree Project
+SPDX-License-Identifier: BSD-3-Clause
+-->
 # osFree Task Manager (taskman)
 
 ![Language: C](https://img.shields.io/badge/language-C-blue)

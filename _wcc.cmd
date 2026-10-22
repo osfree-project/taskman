@@ -1,4 +1,6 @@
 @echo off
+@REM SPDX-FileCopyrightText: (C) 2026 osFree Project
+@REM SPDX-License-Identifier: BSD-3-Clause
 set root=.
 :loop
 if exist "%root%\tools\mk\all.mk" goto found

@@ -1,5 +1,6 @@
-/*
- * Windows Task Manager
+/*!
+ * @file taskman.c
+ * @brief Windows Task Manager
  *
  * Copyright 2023 by Yuri Prokushev
  *
@@ -16,10 +17,17 @@
 
 #include "taskman.h"
 
-/* Globals */
+/*! @brief Initial dialog position parsed from the command line. */
 static WORD nLeft=0, nTop=0;
 
-BOOL CALLBACK EnumWindowsProc(HWND   hWnd, LPARAM lParam)
+/*!
+ * @brief EnumWindows callback: add visible, titled windows to the task list.
+ * @param[in] hWnd    Enumerated top-level window.
+ * @param[in] lParam  Handle to the task list box.
+ * @return TRUE to continue enumeration.
+ * @retval TRUE Continue enumeration.
+ */
+BOOL CALLBACK _export EnumWindowsProc(HWND   hWnd, LPARAM lParam)
 {
 	char szBuf[80];
 
@@ -35,22 +43,16 @@ BOOL CALLBACK EnumWindowsProc(HWND   hWnd, LPARAM lParam)
 	return TRUE;
 }
 
-/****************************************************************************
- *
- *  FUNCTION :	TaskManDlgProcc(HWND, UINT, WPARAM, LPARAM)
- *
- *  PURPOSE  :	Dialog proc for the frame
- *
- *  ENTRY    :	HWND	hWndDlg;	// Dialog window handle
- *		UINT	msg;		// WM_xxx message
- *		WPARAM	wParam; 	// Message 16-bit parameter
- *		LPARAM	lParam; 	// Message 32-bit parameter
- *
- *  RETURNS  :	Non-zero - Message processed
- *		Zero	- DefDlgProc() must process the message
- *
- ****************************************************************************/
-
+/*!
+ * @brief Dialog proc for the frame
+ * @param[in] hWndDlg  Dialog window handle
+ * @param[in] msg      WM_xxx message
+ * @param[in] wParam   Message 16-bit parameter
+ * @param[in] lParam   Message 32-bit parameter
+ * @return Non-zero - Message processed; Zero - DefDlgProc() must process the message
+ * @retval TRUE  Message processed
+ * @retval FALSE DefDlgProc() must process the message
+ */
 BOOL CALLBACK _export TaskManDlgProc(HWND hWndDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg) {
@@ -92,12 +94,19 @@ BOOL CALLBACK _export TaskManDlgProc(HWND hWndDlg, UINT msg, WPARAM wParam, LPAR
 			if (wParam) // on show
 			{
 				HWND hListBox=GetDlgItem(hWndDlg, IDD_TASKLIST);
+				HINSTANCE hInst=(HINSTANCE)GetWindowWord(hWndDlg, GWW_HINSTANCE);
+				FARPROC fpEnum;
 
 				while (SendMessage(hListBox, LB_DELETESTRING, 0, 0)!=LB_ERR) {};
 
 				SendMessage(hListBox, WM_SETREDRAW, FALSE, 0);
 
-				EnumWindows(EnumWindowsProc, (LPARAM)hListBox);
+				fpEnum=MakeProcInstance((FARPROC)EnumWindowsProc, hInst);
+				if (fpEnum)
+				{
+					EnumWindows((WNDENUMPROC)fpEnum, (LPARAM)hListBox);
+					FreeProcInstance(fpEnum);
+				}
 
 				SendMessage(hListBox, LB_SETCURSEL, 0, 0);
 				SendMessage(hListBox, WM_SETREDRAW, TRUE, 0);
@@ -206,6 +215,15 @@ BOOL CALLBACK _export TaskManDlgProc(HWND hWndDlg, UINT msg, WPARAM wParam, LPAR
 	return TRUE;
 }
 
+/*!
+ * @brief Application entry point.
+ * @param[in] inst     This instance
+ * @param[in] prev     Previous instance
+ * @param[in] cmdline  Command line
+ * @param[in] show     Show state
+ * @return Always 0
+ * @retval 0 Always
+ */
 int PASCAL WinMain (HINSTANCE inst, HINSTANCE prev, LPSTR cmdline, int show)
 {
 	VOID (FAR PASCAL * RegisterPenApp)(UINT, BOOL);
@@ -223,14 +241,15 @@ int PASCAL WinMain (HINSTANCE inst, HINSTANCE prev, LPSTR cmdline, int show)
 		sscanf(CmdLine, "%u %u", &nLeft, &nTop);
 	}
 
-	RegisterPenApp=GetProcAddress(GetSystemMetrics(SM_PENWINDOWS), "RegisterPenApp");
+	RegisterPenApp=(VOID (FAR PASCAL *)(UINT, BOOL))
+		GetProcAddress((HMODULE)GetSystemMetrics(SM_PENWINDOWS), "RegisterPenApp");
 
 	if (RegisterPenApp)
 		(*RegisterPenApp)(RPA_DEFAULT, TRUE);
 
-	if (fpDlgProc=MakeProcInstance(TaskManDlgProc, inst))
+	if (fpDlgProc=MakeProcInstance((FARPROC)TaskManDlgProc, inst))
 	{
-		DialogBox(inst, MAKEINTRESOURCE(10), 0, fpDlgProc);
+		DialogBox(inst, MAKEINTRESOURCE(10), 0, (DLGPROC)fpDlgProc);
 		FreeProcInstance(fpDlgProc);
 	}
 
