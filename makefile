@@ -6,6 +6,7 @@
 #
 
 DESCRIPTION   = Janus Task Manager
+TARGET_PACKAGE = DISK02
 LICENSE_CHECK = 1
 
 !include $(%ROOT)tools/mk/build.mk
